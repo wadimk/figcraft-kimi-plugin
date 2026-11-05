@@ -25,7 +25,19 @@ A [Kimi](https://www.kimi.com/) plugin that connects the agent to [FigCraft](htt
    bash scripts/fetch-cli.sh
    ```
 
-2. Register the plugin into your personal market (run from the Kimi desktop bundle):
+2. Start the FigCraft desktop app with its control channel open (the plugin runs in **attach mode** — the agent drives the live window):
+
+   ```powershell
+   # Windows
+   powershell -ExecutionPolicy Bypass -File scripts\start-app.ps1
+   ```
+
+   ```bash
+   # Linux (on macOS install the app from the DMG and run: FigCraft.app/Contents/MacOS/figcraft --control 7979)
+   bash scripts/start-app.sh
+   ```
+
+3. Register the plugin into your personal market (run from the Kimi desktop bundle):
 
    ```cmd
    "%APPDATA%\kimi-desktop\daimon-bundle\bin\kimi-daimon.cmd" kimi-plugin register-personal "C:\path\to\figcraft-kimi-plugin"
@@ -36,7 +48,7 @@ A [Kimi](https://www.kimi.com/) plugin that connects the agent to [FigCraft](htt
    kimi-daimon kimi-plugin register-personal /path/to/figcraft-kimi-plugin
    ```
 
-3. Open Kimi → Plugins → **Personal** tab → click ＋ on **FigCraft**. No restart needed.
+4. Open Kimi → Plugins → **Personal** tab → click ＋ on **FigCraft**. No restart needed.
 
 ## Usage
 
@@ -46,7 +58,9 @@ Just ask in natural language:
 - "Build a kanban board with stickies for my sprint retro"
 - "Make a landing page from the template and save it as a .figcraft file"
 
-The MCP server runs headless (no window; work stays in memory until you ask to save/export). The registered command is `./bin/figcraft-cli.exe mcp` (Windows); the shell script rewrites it to `./bin/figcraft-cli` on macOS/Linux.
+The MCP server runs **attached** (`figcraft-cli mcp --attach 7979 --timeout 300`): every change appears live in the app window. Work is kept only when saved (`save_file`) or exported. If the app is not running, MCP calls fail with a connection error — start it with the control flag and retry.
+
+Prefer headless (no window)? Remove `"--attach", "7979", "--timeout", "300"` from `mcpServers.figcraft.args` in `kimi.plugin.json` — the server then runs an in-memory document with no app needed.
 
 ## License
 

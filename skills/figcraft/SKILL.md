@@ -7,11 +7,14 @@ description: Design in FigCraft from natural language — create UI mockups, scr
 
 FigCraft is a local, Figma-class interface design tool. This plugin connects to its **headless MCP server** (`figcraft-cli mcp`, stdio): an in-process engine session with one untitled document, no window, CPU-rendered. All tools are exposed by the MCP server named `figcraft`.
 
-## Backend: headless by default
+## Backend: attached to the live app
 
-- The registered server runs **headless**: work happens in an in-memory document; nothing is visible on screen and nothing is saved unless you call `save_file {path}` or `export {path}`.
-- Always save results into the current workspace (absolute path) — `save_file` writes `.figcraft`, `export {ids, format, path}` writes png/jpg/svg/webp/pdf.
-- **Attached mode** (driving the visible FigCraft desktop app via `figcraft --control 7979` + `mcp --attach 7979`) is NOT configured in this plugin; it requires editing the plugin's MCP config. Only do this if the user explicitly asks to watch the app live.
+- The registered server runs **attached**: `figcraft-cli mcp --attach 7979 --timeout 300` drives the running FigCraft desktop app through its control channel — the user sees every change live in the window.
+- **The app must be running with the control channel open**: `figcraft.exe --control 7979`. If a call fails with a connection error, ask the user to start the app (or start it yourself with that flag), then retry — the next call reconnects automatically.
+- Work happens in the app's open document; nothing is saved unless you call `save_file {path}` — save into the current workspace (absolute path) when the result matters.
+- Attached calls are never auto-replayed after a transport failure: the edit may have been applied before the reply was lost. Inspect the document before retrying an edit.
+- After a transport failure the error says whether the request was sent at all; the next explicit call reconnects.
+- The app answers while minimised (each request up to ~0.1 s slower). Only `screenshot {window: true}` needs the window on screen — `screenshot` without `window` renders the document instead.
 
 ## Core tools
 
@@ -51,7 +54,7 @@ FigCraft is a local, Figma-class interface design tool. This plugin connects to 
 
 ## Limits
 
-- Headless session state is per server process: long gaps between turns may start a fresh document — save early with `save_file` when the result matters.
+- Document state lives in the app: if the user closes the file or the app, the next call reconnects to whatever is open — check with `inspect_document {outline: true}` before continuing earlier work, and save early with `save_file` when the result matters.
 - Keep inspection responses small (`depth`, `fields`, `outline: true`); full-depth dumps of large documents waste context.
-- Font downloads (`font.download`) only work in the desktop app with user consent; headless uses built-in + system fonts.
+- Font downloads (`font.download`) need the user's prior consent in the app's Missing fonts window.
 - Full command reference: https://github.com/storytold/figcraft/blob/main/docs/mcp.md

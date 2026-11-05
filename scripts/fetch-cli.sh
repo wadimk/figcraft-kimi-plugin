@@ -28,6 +28,8 @@ case "$OS" in
     tar -xzf "$TMP/pkg.tgz" -C "$TMP"
     CLI=$(find "$TMP" -name 'figcraft-cli' -type f | head -1)
     cp "$CLI" bin/figcraft-cli
+    APP=$(find "$TMP" -name 'figcraft' -type f ! -name '*.*' | head -1)
+    [ -n "$APP" ] && cp "$APP" bin/figcraft  # desktop app for attach mode
     rm -rf "$TMP"
     ;;
   *)

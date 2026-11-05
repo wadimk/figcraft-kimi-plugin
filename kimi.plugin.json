@@ -1,7 +1,7 @@
 {
   "$schema": "https://catalog.msh.team/misc/kimi.plugin.schema.json",
   "name": "figcraft",
-  "version": "0.1.0",
+  "version": "0.1.0+local.20261106-001822",
   "description": "Design in FigCraft from natural language: create and edit UI layouts, frames, components, styles, variables and whiteboard boards, render screenshots, and export PNG/SVG/PDF — powered by the local FigCraft MCP server.",
   "keywords": [
     "figcraft",
@@ -53,7 +53,11 @@
     "figcraft": {
       "command": "./bin/figcraft-cli.exe",
       "args": [
-        "mcp"
+        "mcp",
+        "--attach",
+        "7979",
+        "--timeout",
+        "300"
       ]
     }
   }

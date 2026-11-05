@@ -17,9 +17,11 @@ Invoke-WebRequest -Uri $url -OutFile $zip
 $tmp = Join-Path $env:TEMP "figcraft-extract"
 if (Test-Path $tmp) { Remove-Item -Recurse -Force $tmp }
 Expand-Archive -Path $zip -DestinationPath $tmp
-Copy-Item (Join-Path $tmp "figcraft-$ver-windows-x64-portable\figcraft-cli.exe") (Join-Path $bin "figcraft-cli.exe")
+$pkg = Join-Path $tmp "figcraft-$ver-windows-x64-portable"
+Copy-Item (Join-Path $pkg "figcraft-cli.exe") (Join-Path $bin "figcraft-cli.exe")
+Copy-Item (Join-Path $pkg "figcraft.exe") (Join-Path $bin "figcraft.exe")  # desktop app for attach mode
 Remove-Item -Recurse -Force $tmp, $zip
 
 # Manifest already references ./bin/figcraft-cli.exe — nothing to patch.
-Write-Host "Done: bin\figcraft-cli.exe ($tag)"
+Write-Host "Done: bin\figcraft-cli.exe + bin\figcraft.exe ($tag)"
 & (Join-Path $bin "figcraft-cli.exe") --version
