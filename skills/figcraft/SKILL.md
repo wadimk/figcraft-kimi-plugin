@@ -5,13 +5,24 @@ description: Design in FigCraft from natural language — create UI mockups, scr
 
 # FigCraft
 
-FigCraft is a local, Figma-class interface design tool. This plugin connects to its **headless MCP server** (`figcraft-cli mcp`, stdio): an in-process engine session with one untitled document, no window, CPU-rendered. All tools are exposed by the MCP server named `figcraft`.
+FigCraft is a local, Figma-class interface design tool. This plugin registers two MCP servers, both speaking stdio via `figcraft-cli mcp`:
+
+- **`figcraft`** — headless: an in-process engine session with one untitled document, no window, CPU-rendered. Default for all design work.
+- **`figcraft-live`** — attached: drives the visible FigCraft desktop app through its control channel, so the user watches every change live in the window.
 
 ## Backend: headless by default
 
-- The registered server runs **headless**: work happens in an in-memory document; nothing is visible on screen and nothing is saved unless you call `save_file {path}` or `export {path}`.
+- The `figcraft` server runs **headless**: work happens in an in-memory document; nothing is visible on screen and nothing is saved unless you call `save_file {path}` or `export {path}`.
 - Always save results into the current workspace (absolute path) — `save_file` writes `.figcraft`, `export {ids, format, path}` writes png/jpg/svg/webp/pdf.
-- **Attached mode** (driving the visible FigCraft desktop app via `figcraft --control 7979` + `mcp --attach 7979`) is NOT configured in this plugin; it requires editing the plugin's MCP config. Only do this if the user explicitly asks to watch the app live.
+- Use the **`figcraft-live`** server only when the user asks to watch the app live, or the app is already open. Its tools are the same, but the calls run inside the app.
+
+## Live (attached) mode
+
+- The live server needs the app running with its control channel: `bash scripts/open-live.sh` (macOS/Linux), `powershell -ExecutionPolicy Bypass -File scripts\open-live.ps1` (Windows), or manually `figcraft --control 7979`. If the app is not running, live-server calls fail with "request was not sent" — start the app or fall back to the headless `figcraft` server.
+- While you work, the app shows your presence like a collaborator: your avatar in the people row and an outline around the layers you last touched. This is display only.
+- After a transport error, the app may have applied the request — `inspect_document` before retrying an edit. The next call reconnects automatically.
+- The app answers while minimised (each request then takes ~0.1 s). Only `screenshot` with `window` needs the window visible; `screenshot` without `window` renders the document and always works.
+- File access is confined by the app's own automation roots, not by the CLI.
 
 ## Core tools
 

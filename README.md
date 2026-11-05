@@ -10,6 +10,7 @@ A [Kimi](https://www.kimi.com/) plugin that connects the agent to [FigCraft](htt
 - `skills/figcraft/SKILL.md` — agent usage guide (tools, conventions, workflows)
 - `locales/` — localized descriptions (en-US base, zh-CN)
 - `scripts/fetch-cli.ps1` / `scripts/fetch-cli.sh` — download the FigCraft CLI binary for your platform into `~/.figcraft/bin` / `%LOCALAPPDATA%\FigCraft\bin` and create a small wrapper in `bin/` that the manifest points at (the real binary exceeds the plugin single-file size limit, and the manifest command must stay relative)
+- `scripts/open-live.ps1` / `scripts/open-live.sh` — open the FigCraft desktop app with its control channel so the **figcraft-live** MCP server can drive the visible window (downloads the app if missing)
 
 ## Install
 
@@ -58,6 +59,24 @@ Just ask in natural language:
 - "Make a landing page from the template and save it as a .figcraft file"
 
 The MCP server runs headless (no window; work stays in memory until you ask to save/export). The registered command is the wrapper `./bin/figcraft-cli` (`./bin/figcraft-cli.cmd` on Windows), which execs the real CLI from `~/.figcraft/bin` / `%LOCALAPPDATA%\FigCraft\bin` — both fetch scripts set this up automatically.
+
+## Live window (attached mode)
+
+The plugin also registers a second MCP server, **figcraft-live**, that attaches to the running FigCraft desktop app (`figcraft-cli mcp --attach 7979`) so you can watch the agent design in the real window — with its avatar in the people row and outlines around the layers it touches.
+
+Start the app with its control channel first:
+
+```powershell
+# Windows
+powershell -ExecutionPolicy Bypass -File scripts\open-live.ps1
+```
+
+```bash
+# macOS / Linux (downloads the app into ~/.figcraft/app if not installed)
+bash scripts/open-live.sh
+```
+
+or manually: `figcraft --control 7979`. Then ask e.g. "design a login screen live in the open FigCraft window". If the app is not running, figcraft-live calls fail with "request was not sent" — the headless server keeps working regardless.
 
 ## License
 
