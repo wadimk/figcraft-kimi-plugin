@@ -51,7 +51,7 @@
   "skills": "./skills/",
   "mcpServers": {
     "figcraft": {
-      "command": "./bin/figcraft-cli.exe",
+      "command": "./bin/figcraft-cli",
       "args": [
         "mcp"
       ]

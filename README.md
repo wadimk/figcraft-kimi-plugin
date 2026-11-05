@@ -9,11 +9,11 @@ A [Kimi](https://www.kimi.com/) plugin that connects the agent to [FigCraft](htt
 - `kimi.plugin.json` — plugin manifest (MCP server + skill)
 - `skills/figcraft/SKILL.md` — agent usage guide (tools, conventions, workflows)
 - `locales/` — localized descriptions (en-US base, zh-CN)
-- `scripts/fetch-cli.ps1` / `scripts/fetch-cli.sh` — download the FigCraft CLI binary for your platform into `bin/` (binaries are not committed to git)
+- `scripts/fetch-cli.ps1` / `scripts/fetch-cli.sh` — download the FigCraft CLI binary for your platform into `~/.figcraft/bin` / `%LOCALAPPDATA%\FigCraft\bin` and create a small wrapper in `bin/` that the manifest points at (the real binary exceeds the plugin single-file size limit, and the manifest command must stay relative)
 
 ## Install
 
-1. Fetch the CLI binary for your platform:
+1. Fetch the CLI binary for your platform (installs it into `~/.figcraft/bin` / `%LOCALAPPDATA%\FigCraft\bin` and creates a wrapper in `bin/` that the manifest's MCP command points at):
 
    ```powershell
    # Windows
@@ -36,6 +36,17 @@ A [Kimi](https://www.kimi.com/) plugin that connects the agent to [FigCraft](htt
    kimi-daimon kimi-plugin register-personal /path/to/figcraft-kimi-plugin
    ```
 
+   If `kimi-daimon` is not on your PATH on macOS, call it from the desktop bundle
+   (needs the bundled Node and the daimon share dir):
+
+   ```bash
+   "/Applications/Kimi.app/Contents/Resources/resources/daimon-bundle/bin/kimi-daimon" \
+     --node "/Applications/Kimi.app/Contents/Resources/resources/runtime/tool-node/bin/node" \
+     kimi-plugin register-personal \
+     --share-dir "$HOME/Library/Application Support/kimi-desktop/daimon-share" \
+     /path/to/figcraft-kimi-plugin
+   ```
+
 3. Open Kimi → Plugins → **Personal** tab → click ＋ on **FigCraft**. No restart needed.
 
 ## Usage
@@ -46,7 +57,7 @@ Just ask in natural language:
 - "Build a kanban board with stickies for my sprint retro"
 - "Make a landing page from the template and save it as a .figcraft file"
 
-The MCP server runs headless (no window; work stays in memory until you ask to save/export). The registered command is `./bin/figcraft-cli.exe mcp` (Windows); the shell script rewrites it to `./bin/figcraft-cli` on macOS/Linux.
+The MCP server runs headless (no window; work stays in memory until you ask to save/export). The registered command is the wrapper `./bin/figcraft-cli` (`./bin/figcraft-cli.cmd` on Windows), which execs the real CLI from `~/.figcraft/bin` / `%LOCALAPPDATA%\FigCraft\bin` — both fetch scripts set this up automatically.
 
 ## License
 
