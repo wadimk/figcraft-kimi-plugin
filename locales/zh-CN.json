@@ -1,0 +1,23 @@
+{
+  "displayName": "FigCraft",
+  "shortDescription": "用自然语言驱动 FigCraft 进行界面设计与原型制作",
+  "longDescription": "用自然语言在 FigCraft 中做设计：创建和编辑界面布局、框架、组件、样式、变量和白板，渲染截图，并导出 PNG/SVG/PDF —— 由本地 FigCraft MCP 服务驱动。",
+  "developerName": "storytold",
+  "tryPrompts": [
+    "帮我做一个移动端登录页 mockup 并导出为 PNG",
+    "为我的迭代回顾会搭一个带便签的看板",
+    "用模板生成一个落地页并保存为 .figcraft 文件"
+  ],
+  "mcpOverrides": {
+    "figcraft": {
+      "displayName": "FigCraft",
+      "description": "用自然语言驱动 FigCraft 进行界面设计与原型制作"
+    }
+  },
+  "skillOverrides": {
+    "figcraft": {
+      "displayName": "FigCraft",
+      "description": "用自然语言驱动 FigCraft 进行界面设计与原型制作"
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://catalog.msh.team/misc/kimi.plugin.schema.json",
+  "name": "figcraft",
+  "version": "0.1.0",
+  "description": "Design in FigCraft from natural language: create and edit UI layouts, frames, components, styles, variables and whiteboard boards, render screenshots, and export PNG/SVG/PDF — powered by the local FigCraft MCP server.",
+  "keywords": [
+    "figcraft",
+    "design",
+    "ui",
+    "figma-alternative",
+    "prototyping",
+    "whiteboard"
+  ],
+  "author": "storytold",
+  "license": "MIT OR Apache-2.0",
+  "skillInstructions": "Use the figcraft MCP server tools for any design task: create_node / set_properties to build layers, run_command + batch for commands, inspect_document / get_node / screenshot to verify, export to write PNG/SVG/PDF files. See the bundled skill for conventions.",
+  "interface": {
+    "displayName": "FigCraft",
+    "shortDescription": "Agent-driven interface design and prototyping with FigCraft",
+    "longDescription": "Design in FigCraft from natural language: create and edit UI layouts, frames, components, styles, variables and whiteboard boards, render screenshots, and export PNG/SVG/PDF — powered by the local FigCraft MCP server.",
+    "developerName": "storytold",
+    "websiteURL": "https://github.com/storytold/figcraft",
+    "iconUrl": "https://raw.githubusercontent.com/storytold/figcraft/main/assets/app-icon/figcraft-256.png",
+    "category": "PRODUCTIVITY",
+    "defaultLocale": "en-US",
+    "locales": "./locales/",
+    "tryPrompts": [
+      "Create a mobile login screen mockup and export it as PNG",
+      "Build a kanban board with stickies for my sprint retro",
+      "Make a landing page from the template and save it as a .figcraft file"
+    ],
+    "skillOverrides": {
+      "figcraft": {
+        "displayName": "FigCraft",
+        "description": "Agent-driven interface design and prototyping with FigCraft"
+      }
+    },
+    "hostKind": "local",
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "mcpOverrides": {
+      "figcraft": {
+        "displayName": "FigCraft",
+        "description": "Agent-driven interface design and prototyping with FigCraft"
+      }
+    }
+  },
+  "skills": "./skills/",
+  "mcpServers": {
+    "figcraft": {
+      "command": "./bin/figcraft-cli.exe",
+      "args": [
+        "mcp"
+      ]
+    }
+  }
+}
