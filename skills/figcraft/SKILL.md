@@ -18,7 +18,7 @@ FigCraft is a local, Figma-class interface design tool. This plugin registers tw
 
 ## Live (attached) mode
 
-- The live server needs the app running with its control channel: `bash scripts/open-live.sh` (macOS/Linux), `powershell -ExecutionPolicy Bypass -File scripts\open-live.ps1` (Windows), or manually `figcraft --control 7979`. If the app is not running, live-server calls fail with "request was not sent" — start the app or fall back to the headless `figcraft` server.
+- The live server needs the app running with its control channel: `bash scripts/open-live.sh` (macOS/Linux), `powershell -ExecutionPolicy Bypass -File scripts\open-live.ps1` (Windows), or manually `figcraft --control 7979`. If the app is not running, live-server calls fail with "request was not sent" — start the app or fall back to the headless `figcraft` server. The app may take up to 5 minutes per request (`--timeout 300`), so big batches are fine.
 - While you work, the app shows your presence like a collaborator: your avatar in the people row and an outline around the layers you last touched. This is display only.
 - After a transport error, the app may have applied the request — `inspect_document` before retrying an edit. The next call reconnects automatically.
 - The app answers while minimised (each request then takes ~0.1 s). Only `screenshot` with `window` needs the window visible; `screenshot` without `window` renders the document and always works.
